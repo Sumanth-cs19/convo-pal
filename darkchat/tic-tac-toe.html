@@ -1,0 +1,187 @@
+<html>
+<head>
+<style>
+    #box{
+        border:3px solid black;
+        height:100px;
+        width:100px;
+        font-size:30px;
+        background-color:black;
+        color:gold;
+        text-align:center;
+    }
+    table{
+        position:relative;
+        top:200px;
+    }
+    
+</style>    
+</head>
+    <body>
+    <center>
+        <table id="table1">
+            <tr>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+            
+            </tr>
+            <tr>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+            
+            </tr>
+            <tr>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+                <td><div id="box"></div></td>
+            
+            </tr>
+        
+        </table>
+        
+        </center>
+        <script src="jquery-3.4.1.js"></script>
+        <script>
+        $(document).ready(function(){
+            player1="X";
+            player2="O";
+            currentplayer=player1;
+                        function nextturn(currentplayer){
+                if (currentplayer==player1){return player2;}
+                else{return player1;}
+            }
+        $("#table1 tr td div").click(function(){
+            if ($(this).text()==""){
+            $(this).append(currentplayer);
+            currentplayer=nextturn(currentplayer);
+                
+                
+                var result=checkwinner();
+                
+            if (result){
+                alert(result);
+            }
+                bestMove();
+            var result=checkwinner();
+                
+            if (result){
+                alert(result);
+            }
+                
+            }
+            
+        });
+            function checkwinner(){
+                var f1=$("#table1 tr:nth-child(1) td:nth-child(1) div").text();
+                var f2=$("#table1 tr:nth-child(1) td:nth-child(2) div").text();
+                var f3=$("#table1 tr:nth-child(1) td:nth-child(3) div").text();
+                var f4=$("#table1 tr:nth-child(2) td:nth-child(1) div").text();
+                var f5=$("#table1 tr:nth-child(2) td:nth-child(2) div").text();
+                var f6=$("#table1 tr:nth-child(2) td:nth-child(3) div").text();
+                var f7=$("#table1 tr:nth-child(3) td:nth-child(1) div").text();
+                var f8=$("#table1 tr:nth-child(3) td:nth-child(2) div").text();
+                var f9=$("#table1 tr:nth-child(3) td:nth-child(3) div").text();
+                
+                if((f1==f2)&&(f2==f3)&&(f1!="")){
+                    return f1;
+                }
+                if((f1==f4)&&(f4==f7)&&(f1!="")){
+                    return f1;
+                }
+                if((f1==f5)&&(f5==f9)&&(f1!="")){
+                    return f1;
+                }
+                if((f2==f5)&&(f2==f8)&&(f2!="")){
+                    return f2;
+                }
+                if((f3==f6)&&(f9==f3)&&(f3!="")){
+                    return f3;
+                }
+                if((f4==f5)&&(f4==f6)&&(f4!="")){
+                    return f4;
+                }
+                if((f7==f8)&&(f8==f9)&&(f7!="")){
+                    return f7;
+                }
+                if((f3==f5)&&(f5==f7)&&(f3!="")){
+                    return f3;
+                }
+                if ((f1!="")&&(f2!="")&&(f3!="")&&(f4!="")&&(f5!="")&&(f6!="")&&(f7!="")&&(f8!="")&&(f9!="")){
+                    return "tie";
+                }
+                return null;
+            }
+            function bestMove(){
+                var bestscore=-Infinity;
+                var move;
+                for(let i=0;i<3;i++){
+                 for(let j=0;j<3;j++){
+                     var box=$("#table1 tr").eq(i).children().eq(j).children();
+                     if(box.text()==""){
+                         box.html("O");
+                        let score=minimax(0,false);
+                         box.empty();
+                    if (score>bestscore){
+                        bestscore=score;
+                        move={i,j};
+                    }
+                     }
+                 }   
+                }
+                $("#table1 tr").eq(move.i).children().eq(move.j).children().html("O");
+                currentplayer=nextturn(currentplayer);
+            }
+            let scores={X:-1,O:1,tie:0}
+            function minimax(depth,ismaximizing){
+                let result=checkwinner();
+                if(result){
+                    return scores[result];
+                    
+                }
+                if(ismaximizing){
+                    var bestscore=-Infinity;
+                var move;
+                for(let i=0;i<3;i++){
+                 for(let j=0;j<3;j++){
+                     var box=$("#table1 tr").eq(i).children().eq(j).children();
+                     if(box.text()==""){
+                         box.html("O");
+                        let score=minimax(depth+1,false);
+                         box.empty();
+                         if(score>bestscore){
+                             bestscore=score;
+                         }
+                }
+            }
+                }
+                    return bestscore;
+                }
+                else{
+                                        var bestscore=Infinity;
+                var move;
+                for(let i=0;i<3;i++){
+                 for(let j=0;j<3;j++){
+                     var box=$("#table1 tr").eq(i).children().eq(j).children();
+                     if(box.text()==""){
+                         box.html("X");
+                        let score=minimax(depth+1,true);
+                         box.empty();
+                         if (score<bestscore){
+                             bestscore=score;
+                         }
+                }
+            }
+                }
+                    return bestscore;
+                    
+                }
+            }
+        
+        });
+        </script>
+    
+    
+    </body>
+</html>
